@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 var cors = require('cors')
 
 // IMPORT ROUTES
-
+const userRoutes = require("./src/routes/users");
 
 var app = express();
 app.use(cors())
@@ -36,3 +36,5 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use("/api", userRoutes);
