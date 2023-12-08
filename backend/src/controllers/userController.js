@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -46,7 +46,7 @@ const userController = {
             }
 
             // Generate JWT Token 
-            const token = jwt.sign({ _id: user._id }, '123456789'); 
+            const token = jwt.sign({ _id: user._id }, process.env.tokenCode); 
 
             res.status (200).send({ message: 'Logged in successfully', user, token });
         } catch (error) {
@@ -57,11 +57,11 @@ const userController = {
     // Change Verified Status
     async changeVerifiedStatus(req, res) {
         try {
-            const userId = req.params.id; // Assuming the user's ID is passed as a URL parameter
+            const userId = req.body.email; // Assuming the user's ID is passed as a URL parameter
             const newVerifiedStatus = req.body.verified; // Assuming the new status is passed in the request body
 
             // Find the user by ID and update the verified status
-            const user = await User.findByIdAndUpdate(userId, { verified: newVerifiedStatus }, { new: true });
+            const user = await User.findOneAndUpdate(userId, { verified: newVerifiedStatus }, { new: true });
 
             if (!user) {
                 return res.status(404).send('User not found');
@@ -71,7 +71,17 @@ const userController = {
         } catch (error) {
             res.status(500).send(error.message);
         }
-    }
+    },
+
+    // Get all users
+    async getAllUsers(req,res){
+        try{
+            const users = await User.find()
+            res.status (200).send({  users });
+        }catch{
+            res.status(400).send ({message : "there is a problem"})
+        }
+    },
 };
 
 module.exports = userController;

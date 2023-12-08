@@ -17,7 +17,11 @@ const productSchema = new mongoose.Schema({
     images: [{
         type: String,
         trim: true // Optional, trims whitespace from the image URLs
-    }]
+    }],
+    category:{
+        type: String,
+        require: true,
+    }
 });
 
 module.exports = mongoose.model('product', productSchema);
