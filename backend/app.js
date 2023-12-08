@@ -1,27 +1,28 @@
 var express = require('express');
-var path = require('path');
 const mongoose = require("mongoose");
-var cors = require('cors')
+var cors = require('cors');
+require("dotenv").config();
 
 // IMPORT ROUTES
-const userRoutes = require("./src/routes/users");
+const userRoutes = require("./src/routes/usersRoute");
 
 var app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 // SERVER PORT
-const port = process.env.PORT || 3000;
+const port = process.env.PORT ;
 
 // DATA BASE CONNECTION
 mongoose.connect(
-  "mongodb+srv://adambenhadjaissa:tylar123@tylarcluster.rsonrk6.mongodb.net/?retryWrites=true&w=majority")
+  process.env.baseAccess)
 .then(() => {
   console.log("Database connected!");
   // Starting a server
   app.listen(port, process.env.ALWAYSDATA_HTTP_ID, () => {
     console.log(`App is running at ${port}`);
   });
-})
-.catch((err) => console.log(err));
+}).catch((err) => console.log(err));
 
 // for cors origin config
 app.use((req, res, next) => {
